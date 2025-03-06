@@ -24,7 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function ConfirmationPage() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const email = searchParams.get('email') || '';
+  const phone = searchParams.get('phone') || '';
   const [otp, setOtp] = useState('');
   const [verificationStatus, setVerificationStatus] = useState<
     'initial' | 'pending' | 'verified' | 'error'
@@ -35,7 +35,7 @@ export default function ConfirmationPage() {
     if (otp.length !== 6) {
       toast({
         title: "Invalid OTP",
-        description: "Please enter a valid 6-digit OTP code.",
+        description: "Please enter a valid 4-digit OTP code.",
         variant: "destructive",
       });
       return;
@@ -77,16 +77,16 @@ export default function ConfirmationPage() {
       <Card className="w-full max-w-md shadow-xl overflow-hidden">
         <CardHeader className="bg-[#A6001E] text-white">
           <CardTitle className="text-2xl md:text-3xl font-bold">
-            Email Verification
+            Phone Verification
           </CardTitle>
           <CardDescription className="text-purple-100">
             {verificationStatus === 'initial' 
-              ? "Enter the verification code sent to your email"
+              ? "Enter the verification code sent to your phone"
               : verificationStatus === 'pending'
               ? "Verifying your code..."
               : verificationStatus === 'verified'
               ? 'Your email has been verified'
-              : 'There was an issue verifying your email'}
+              : 'There was an issue verifying your phone'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center p-8 space-y-6">
@@ -100,8 +100,8 @@ export default function ConfirmationPage() {
                   Enter Verification Code
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  We've sent a 6-digit verification code to:{' '}
-                  <span className="font-medium">{email}</span>
+                  We've sent a 4-digit verification code to:{' '}
+                  <span className="font-medium">{phone}</span>
                 </p>
                 
                 <InputOTP
@@ -132,7 +132,7 @@ export default function ConfirmationPage() {
                     Verifying...
                   </>
                 ) : (
-                  "Verify Email"
+                  "Verify Phone"
                 )}
               </Button>
               
