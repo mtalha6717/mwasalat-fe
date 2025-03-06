@@ -145,10 +145,9 @@ export default function FascinatingForm() {
       message,
     } = await apiPost('forms', {
       ...rest,
-      latitude: location?.lat,
-      longitude: location?.lng,
+      userLatitude: location?.lat,
+      userLongitude: location?.lng,
     });
-    console.log(message, 'message', response);
 
     if (success) {
       toast({
@@ -157,7 +156,7 @@ export default function FascinatingForm() {
           ? "We've sent a confirmation email to your email address."
           : 'Thank you for submitting your information.',
       });
-      // form.reset();
+      form.reset();
     } else {
       toast({
         title: 'Something went wrong',
