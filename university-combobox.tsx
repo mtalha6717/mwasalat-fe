@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useTranslation } from 'react-i18next';
 
 interface UniversityComboboxProps {
   universities: string[];
@@ -31,7 +32,12 @@ export function UniversityCombobox({
 }: UniversityComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
-
+  const { t, i18n } = useTranslation();
+  
+  // Determine text direction based on current language
+  const isRtl = i18n.language === 'ar';
+  const directionClass = isRtl ? 'text-right' : 'text-left';
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -39,24 +45,26 @@ export function UniversityCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className={`w-full justify-between ${directionClass}`}
+          dir={isRtl ? 'rtl' : 'ltr'}
         >
-          {value ? value : 'Search for a college/university...'}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          {value ? value : t('form.college')}
+          <ChevronsUpDown className={`${isRtl ? 'mr-2' : 'ml-2'} h-4 w-4 shrink-0 opacity-50`} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="!w-full justify-start p-0">
-        <Command className="justify-start items-start text-left">
+      <PopoverContent className="!w-full justify-start p-0" align={isRtl ? 'end' : 'start'}>
+        <Command className={`justify-start items-start ${directionClass}`} dir={isRtl ? 'rtl' : 'ltr'}>
           <CommandInput
-            placeholder="Search for a college/university..."
+            placeholder={t('form.college')}
             value={searchValue}
             onValueChange={setSearchValue}
+            className={directionClass}
           />
           <CommandList>
             <CommandEmpty>
               {searchValue ? (
                 <>
-                  No university found.
+                  {isRtl ? 'لم يتم العثور على جامعة.' : 'No university found.'}
                   <Button
                     variant="link"
                     className="p-0 h-auto font-normal"
@@ -65,11 +73,11 @@ export function UniversityCombobox({
                       setOpen(false);
                     }}
                   >
-                    Add "{searchValue}"
+                    {isRtl ? `إضافة "${searchValue}"` : `Add "${searchValue}"`}
                   </Button>
                 </>
               ) : (
-                'No university found.'
+                isRtl ? 'لم يتم العثور على جامعة.' : 'No university found.'
               )}
             </CommandEmpty>
             <CommandGroup className="max-h-60 w-full overflow-auto">
@@ -81,10 +89,11 @@ export function UniversityCombobox({
                     onChange(university);
                     setOpen(false);
                   }}
+                  className={directionClass}
                 >
                   <Check
                     className={cn(
-                      'mr-2 h-4 w-4',
+                      `${isRtl ? 'ml-2' : 'mr-2'} h-4 w-4`,
                       value === university ? 'opacity-100' : 'opacity-0'
                     )}
                   />

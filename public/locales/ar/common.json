@@ -1,0 +1,39 @@
+{
+  "form": {
+    "title": "نموذج التسجيل",
+    "description": "يرجى ملء جميع المعلومات المطلوبة أدناه",
+    "college": "الكلية/الجامعة",
+    "phone": "رقم الهاتف",
+    "phoneFormat": "+96896555067",
+    "email": "البريد الإلكتروني",
+    "emailFormat": "you@example.com",
+    "location": "الموقع",
+    "locateMe": "حدد موقعي",
+    "loadingMap": "جاري تحميل الخريطة...",
+    "coordinates": "الإحداثيات الحالية",
+    "selectedAddress": "العنوان المحدد",
+    "submit": "إرسال التسجيل",
+    "submitting": "جاري الإرسال...",
+    "validation": {
+      "collegeRequired": "الكلية/الجامعة مطلوبة",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "phoneInvalid": "يرجى إدخال رقم هاتف عماني صالح",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+      "locationRequired": "الموقع مطلوب",
+      "collegePlaceholder": "ابحث عن كلية/جامعة"
+    },
+    "messages": {
+      "locationError": "تعذر الحصول على موقعك الحالي. يرجى التحقق من أذونات المتصفح.",
+      "geolocationNotSupported": "متصفحك لا يدعم خدمات تحديد الموقع الجغرافي.",
+      "addressLookupFailed": "تعذر الحصول على عنوان لهذا الموقع."
+    },
+    "toast": {
+      "successTitle": "تم إرسال المعلومات بنجاح",
+      "successEmail": "لقد أرسلنا رسالة تأكيد إلى عنوان بريدك الإلكتروني.",
+      "successDefault": "شكرًا لإرسال معلوماتك.",
+      "errorTitle": "حدث خطأ ما",
+      "errorDefault": "لم نتمكن من إرسال معلوماتك. يرجى المحاولة مرة أخرى."
+    }
+  }
+}

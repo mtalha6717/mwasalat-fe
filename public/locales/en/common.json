@@ -1,0 +1,39 @@
+{
+  "form": {
+    "title": "Registration Form",
+    "description": "Please fill out all the required information below",
+    "college": "College/University",
+    "phone": "Phone Number",
+    "phoneFormat": "+96896555067",
+    "email": "Email Address",
+    "emailFormat": "you@example.com",
+    "location": "Location",
+    "locateMe": "Locate Me",
+    "loadingMap": "Loading map...",
+    "coordinates": "Current coordinates",
+    "selectedAddress": "Selected address",
+    "submit": "Submit Registration",
+    "submitting": "Submitting...",
+    "validation": {
+      "collegeRequired": "College/University is required",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid Omani phone number",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "locationRequired": "Location is required",
+      "placeHolder": "Search for a college/university..."
+    },
+    "messages": {
+      "locationError": "Unable to get your current location. Please check your browser permissions.",
+      "geolocationNotSupported": "Your browser does not support geolocation services.",
+      "addressLookupFailed": "Unable to get address for this location."
+    },
+    "toast": {
+      "successTitle": "Information submitted successfully",
+      "successEmail": "We've sent a confirmation email to your email address.",
+      "successDefault": "Thank you for submitting your information.",
+      "errorTitle": "Something went wrong",
+      "errorDefault": "We couldn't submit your information. Please try again."
+    }
+  }
+}

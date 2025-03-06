@@ -58,7 +58,7 @@ export default function ConfirmationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center">
       <Card className="w-full max-w-md shadow-xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+        <CardHeader className="bg-[#A6001E] text-white">
           <CardTitle className="text-2xl md:text-3xl font-bold">
             Email Verification
           </CardTitle>

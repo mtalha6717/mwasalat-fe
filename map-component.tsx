@@ -96,9 +96,8 @@ export function MapComponent({
     });
   };
 
-  const onAutocompleteLoad = (
-    autocomplete: google.maps.places.Autocomplete
-  ) => {
+  const onAutocompleteLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    autocomplete.setComponentRestrictions({ country: "OM" });
     setSearchBox(autocomplete);
   };
 
