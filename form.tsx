@@ -30,32 +30,41 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import apiPost from '@/lib/network/apiPost';
-import { toast, useToast } from './hooks/use-toast';
+import { useToast } from './hooks/use-toast';
 
-// Sample list of colleges/universities
-const universities = [
-  'Harvard University',
-  'Stanford University',
-  'Massachusetts Institute of Technology',
-  'University of California, Berkeley',
-  'University of Oxford',
-  'University of Cambridge',
-  'California Institute of Technology',
-  'Princeton University',
-  'Yale University',
-  'Columbia University',
-  'University of Chicago',
-  'University of Michigan',
-  'Cornell University',
-  'University of Pennsylvania',
-  'Johns Hopkins University',
+const universitiesWithCoordinates = [
+  { label: 'Harvard University', lat: 42.374443, lon: -71.116943 },
+  { label: 'Stanford University', lat: 37.42823, lon: -122.168861 },
+  {
+    label: 'Massachusetts Institute of Technology',
+    lat: 42.360091,
+    lon: -71.09416,
+  },
+  {
+    label: 'University of California, Berkeley',
+    lat: 37.871853,
+    lon: -122.258423,
+  },
+  { label: 'University of Oxford', lat: 51.754816, lon: -1.254367 },
+  { label: 'University of Cambridge', lat: 52.204267, lon: 0.114908 },
+  {
+    label: 'California Institute of Technology',
+    lat: 34.137658,
+    lon: -118.125269,
+  },
+  { label: 'Princeton University', lat: 40.343094, lon: -74.655073 },
+  { label: 'Yale University', lat: 41.316324, lon: -72.922343 },
+  { label: 'Columbia University', lat: 40.807536, lon: -73.962573 },
+  { label: 'University of Chicago', lat: 41.788608, lon: -87.598713 },
+  { label: 'University of Michigan', lat: 42.278044, lon: -83.738224 },
+  { label: 'Cornell University', lat: 42.453449, lon: -76.473503 },
+  { label: 'University of Pennsylvania', lat: 39.952219, lon: -75.193214 },
+  { label: 'Johns Hopkins University', lat: 39.329901, lon: -76.620515 },
 ];
 
 // Form validation schema
 const formSchema = yup.object({
-  description: yup.string().required('Description is required'),
   college: yup.string().required('College/University is required'),
-  name: yup.string().required('Name is required'),
   phone: yup
     .string()
     .required('Phone number is required')
@@ -88,11 +97,9 @@ export default function FascinatingForm() {
   const form = useForm<FormValues>({
     resolver: yupResolver(formSchema),
     defaultValues: {
-      description: '',
       college: '',
       phone: '',
       email: '',
-      name: '',
       location: { lat: 0, lng: 0 },
       address: '',
     },
@@ -139,6 +146,9 @@ export default function FascinatingForm() {
   const onSubmit = async (data: FormValues) => {
     const { location, ...rest } = data;
     setIsSubmitting(true);
+    const college = universitiesWithCoordinates.find(
+      (item) => item.label === rest.college
+    );
     const {
       success,
       data: response,
@@ -147,6 +157,8 @@ export default function FascinatingForm() {
       ...rest,
       userLatitude: location?.lat,
       userLongitude: location?.lng,
+      collegeLatitude: college?.lat,
+      collegeLongitude: college?.lon,
     });
 
     if (success) {
@@ -184,39 +196,6 @@ export default function FascinatingForm() {
             <CardContent className="grid gap-6 p-6">
               <FormField
                 control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-lg font-medium">Name</FormLabel>
-                    <FormControl>
-                      <Input type="name" placeholder="John Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-lg font-medium">
-                      Description
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Tell us about yourself..."
-                        className="min-h-[120px] resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name="college"
                 render={({ field }) => (
                   <FormItem>
@@ -225,7 +204,9 @@ export default function FascinatingForm() {
                     </FormLabel>
                     <FormControl>
                       <UniversityCombobox
-                        universities={universities}
+                        universities={universitiesWithCoordinates?.map(
+                          (university) => university.label
+                        )}
                         value={field.value}
                         onChange={field.onChange}
                       />
