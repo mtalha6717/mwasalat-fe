@@ -582,6 +582,7 @@ export default function FascinatingForm() {
   };
 
   const directionClass = i18n.language === 'ar' ? 'rtl-form' : '';
+  const isArabic = i18n.language === 'ar';
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center ${directionClass}`}>
@@ -657,17 +658,31 @@ export default function FascinatingForm() {
               </div>
 
               <div className="grid gap-2">
-                <div className="flex justify-between items-center">
-                  <Label className="text-lg font-medium">{t('form.location')}</Label>
-                  <Button 
-                    type="button" 
-                    onClick={getCurrentLocation}
-                    className="flex items-center gap-1 bg-[#A6001E] border-[#A6001E] text-white hover:bg-[#8A0017]"
-                  >
-                    <MapPin size={16} />
-                    <span>{t('form.locateMe')}</span>
-                  </Button>
-                </div>
+                {isArabic ? (
+                  <div className="flex justify-between items-center">
+                    <Button 
+                      type="button" 
+                      onClick={getCurrentLocation}
+                      className="flex items-center gap-1 bg-[#A6001E] border-[#A6001E] text-white hover:bg-[#8A0017]"
+                    >
+                      <MapPin size={16} />
+                      <span>{t('form.locateMe')}</span>
+                    </Button>
+                    <Label className="text-lg font-medium">{t('form.location')}</Label>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <Label className="text-lg font-medium">{t('form.location')}</Label>
+                    <Button 
+                      type="button" 
+                      onClick={getCurrentLocation}
+                      className="flex items-center gap-1 bg-[#A6001E] border-[#A6001E] text-white hover:bg-[#8A0017]"
+                    >
+                      <MapPin size={16} />
+                      <span>{t('form.locateMe')}</span>
+                    </Button>
+                  </div>
+                )}
                 <div className="h-[300px] rounded-md overflow-hidden border">
                   {isLoaded ? (
                     <MapComponent
@@ -712,3 +727,6 @@ export default function FascinatingForm() {
     </div>
   );
 }
+
+
+

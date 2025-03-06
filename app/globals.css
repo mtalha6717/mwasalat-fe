@@ -127,3 +127,14 @@ html[dir="rtl"] .rtl-form .ml-2 {
   margin-left: 0;
   margin-right: 0.5rem;
 }
+
+.force-ltr {
+  direction: ltr !important;
+  text-align: center !important;
+  unicode-bidi: plaintext !important;
+}
+
+.force-ltr input {
+  direction: ltr !important;
+  text-align: center !important;
+}

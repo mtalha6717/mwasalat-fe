@@ -3,6 +3,7 @@
     "title": "Registration Form",
     "description": "Please fill out all the required information below",
     "college": "College/University",
+    "placeHolder": "Search for a college/university...",
     "phone": "Phone Number",
     "phoneFormat": "+96896555067",
     "email": "Email Address",
@@ -13,6 +14,7 @@
     "coordinates": "Current coordinates",
     "selectedAddress": "Selected address",
     "submit": "Submit Registration",
+    "search_location": "Search for a location...",
     "submitting": "Submitting...",
     "validation": {
       "collegeRequired": "College/University is required",
@@ -20,8 +22,7 @@
       "phoneInvalid": "Please enter a valid Omani phone number",
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email address",
-      "locationRequired": "Location is required",
-      "placeHolder": "Search for a college/university..."
+      "locationRequired": "Location is required"
     },
     "messages": {
       "locationError": "Unable to get your current location. Please check your browser permissions.",
@@ -34,6 +35,41 @@
       "successDefault": "Thank you for submitting your information.",
       "errorTitle": "Something went wrong",
       "errorDefault": "We couldn't submit your information. Please try again."
+    }
+  },
+  "verification": {
+    "title": "Phone Verification",
+    "emailTitle": "Email Verification",
+    "description": {
+      "initial": "Enter the verification code sent to your phone",
+      "pending": "Verifying your code...",
+      "pendingEmail": "We're verifying your email address",
+
+      "verified": "Your email has been verified",
+      "error": "There was an issue verifying your email"
+    },
+    "enterCode": "Enter Verification Code",
+    "codeSent": "We've sent a 4-digit verification code to:",
+    "verify": "Verify Phone",
+    "verifying": "Verifying...",
+    "noCode": "Didn't receive a code?",
+    "resend": "Resend code",
+    "verifyingCode": "Verifying your code",
+    "pleaseWait": "Please wait while we verify your information.",
+    "verifyingEmail": "Verifying your email",
+    "verifyingWait": "We're confirming the email address:",
+
+    "verified": "Email Verified!",
+    "successMessage": "Your email address",
+    "successMessageEnd": "has been successfully verified.",
+    "continue": "Continue to Dashboard",
+    "toast": {
+      "invalidTitle": "Invalid OTP",
+      "invalidDescription": "Please enter a valid 6-digit OTP code.",
+      "failedTitle": "Verification Failed",
+      "failedDescription": "The OTP code you entered is incorrect or expired. Please try again.",
+      "errorTitle": "Verification Error",
+      "errorDescription": "Something went wrong while verifying your code. Please try again."
     }
   }
 }

@@ -20,9 +20,12 @@ import {
 
 import apiGet from '@/lib/network/apiGet';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
 
 export default function ConfirmationPage() {
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
   const [otp, setOtp] = useState('');
@@ -34,8 +37,8 @@ export default function ConfirmationPage() {
   const verifyOTP = async () => {
     if (otp.length !== 6) {
       toast({
-        title: "Invalid OTP",
-        description: "Please enter a valid 6-digit OTP code.",
+        title: t('verification.toast.invalidTitle'),
+        description: t('verification.toast.invalidDescription'),
         variant: "destructive",
       });
       return;
@@ -45,7 +48,6 @@ export default function ConfirmationPage() {
     setVerificationStatus('pending');
 
     try {
-      // Replace with your actual API endpoint for OTP verification
       const { success, message, err } = await apiGet('verify-otp', {
         otp,
         email,
@@ -55,16 +57,16 @@ export default function ConfirmationPage() {
       
       if (!success) {
         toast({
-          title: message || "Verification Failed",
-          description: err || "The OTP code you entered is incorrect or expired. Please try again.",
+          title: message || t('verification.toast.failedTitle'),
+          description: err || t('verification.toast.failedDescription'),
           variant: 'destructive',
         });
       }
     } catch (error) {
       setVerificationStatus('error');
       toast({
-        title: "Verification Error",
-        description: "Something went wrong while verifying your code. Please try again.",
+        title: t('verification.toast.errorTitle'),
+        description: t('verification.toast.errorDescription'),
         variant: 'destructive',
       });
     } finally {
@@ -72,21 +74,25 @@ export default function ConfirmationPage() {
     }
   };
 
+  const directionClass = i18n.language === 'ar' ? 'rtl-form' : '';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center">
+    <div className={`min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center ${directionClass}`}>
+      <LanguageSwitcher />
+      
       <Card className="w-full max-w-md shadow-xl overflow-hidden">
         <CardHeader className="bg-[#A6001E] text-white">
           <CardTitle className="text-2xl md:text-3xl font-bold">
-            Phone Verification
+            {t('verification.title')}
           </CardTitle>
           <CardDescription className="text-purple-100">
             {verificationStatus === 'initial' 
-              ? "Enter the verification code sent to your phone"
+              ? t('verification.description.initial')
               : verificationStatus === 'pending'
-              ? "Verifying your code..."
+              ? t('verification.description.pending')
               : verificationStatus === 'verified'
-              ? 'Your email has been verified'
-              : 'There was an issue verifying your email'}
+              ? t('verification.description.verified')
+              : t('verification.description.error')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center p-8 space-y-6">
@@ -97,27 +103,27 @@ export default function ConfirmationPage() {
               </div>
               <div className="text-center mb-4">
                 <h3 className="text-xl font-semibold mb-2">
-                  Enter Verification Code
+                  {t('verification.enterCode')}
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  We've sent a 4-digit verification code to:{' '}
+                  {t('verification.codeSent')}{' '}
                   <span className="font-medium">{email}</span>
                 </p>
-                
                 <InputOTP
-                  maxLength={6}
-                  value={otp}
-                  onChange={setOtp}
-                  disabled={isSubmitting}
-                  containerClassName="justify-center"
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                </InputOTP>
+                 maxLength={4}
+                 value={otp}
+                 onChange={setOtp}
+                 disabled={isSubmitting}
+                 containerClassName="justify-center force-ltr"
+                 dir="ltr"
+>
+                <InputOTPGroup>
+               <InputOTPSlot index={0} />
+               <InputOTPSlot index={1} />
+               <InputOTPSlot index={2} />
+               <InputOTPSlot index={3} />
+               </InputOTPGroup>
+             </InputOTP>
               </div>
               
               <Button 
@@ -128,15 +134,15 @@ export default function ConfirmationPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
+                    {t('verification.verifying')}
                   </>
                 ) : (
-                  "Verify Phone"
+                  t('verification.verify')
                 )}
               </Button>
               
               <p className="text-sm text-gray-500">
-                Didn't receive a code? <a href="#" className="text-[#A6001E] font-medium">Resend code</a>
+                {t('verification.noCode')} <a href="#" className="text-[#A6001E] font-medium">{t('verification.resend')}</a>
               </p>
             </>
           )}
@@ -148,10 +154,10 @@ export default function ConfirmationPage() {
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-semibold mb-2">
-                  Verifying your code
+                  {t('verification.verifyingCode')}
                 </h3>
                 <p className="text-gray-500">
-                  Please wait while we verify your information.
+                  {t('verification.pleaseWait')}
                 </p>
               </div>
             </>
@@ -163,18 +169,18 @@ export default function ConfirmationPage() {
                 <CheckCircle className="h-10 w-10 text-green-600" />
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Email Verified!</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('verification.verified')}</h3>
                 <p className="text-gray-500">
-                  Your email address{' '}
-                  <span className="font-medium">{email}</span> has been
-                  successfully verified.
+                  {t('verification.successMessage')}{' '}
+                  <span className="font-medium">{email}</span>{' '}
+                  {t('verification.successMessageEnd')}
                 </p>
               </div>
               <Button 
                 className="w-full bg-[#A6001E] hover:bg-[#8e0019]"
                 onClick={() => window.location.href = '/dashboard'}
               >
-                Continue to Dashboard
+                {t('verification.continue')}
               </Button>
             </>
           )}
