@@ -24,7 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function ConfirmationPage() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const phone = searchParams.get('phone') || '';
+  const email = searchParams.get('email') || '';
   const [otp, setOtp] = useState('');
   const [verificationStatus, setVerificationStatus] = useState<
     'initial' | 'pending' | 'verified' | 'error'
@@ -35,7 +35,7 @@ export default function ConfirmationPage() {
     if (otp.length !== 6) {
       toast({
         title: "Invalid OTP",
-        description: "Please enter a valid 4-digit OTP code.",
+        description: "Please enter a valid 6-digit OTP code.",
         variant: "destructive",
       });
       return;
@@ -86,7 +86,7 @@ export default function ConfirmationPage() {
               ? "Verifying your code..."
               : verificationStatus === 'verified'
               ? 'Your email has been verified'
-              : 'There was an issue verifying your phone'}
+              : 'There was an issue verifying your email'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center p-8 space-y-6">
@@ -101,7 +101,7 @@ export default function ConfirmationPage() {
                 </h3>
                 <p className="text-gray-500 mb-4">
                   We've sent a 4-digit verification code to:{' '}
-                  <span className="font-medium">{phone}</span>
+                  <span className="font-medium">{email}</span>
                 </p>
                 
                 <InputOTP
@@ -116,7 +116,6 @@ export default function ConfirmationPage() {
                     <InputOTPSlot index={1} />
                     <InputOTPSlot index={2} />
                     <InputOTPSlot index={3} />
-                  
                   </InputOTPGroup>
                 </InputOTP>
               </div>
