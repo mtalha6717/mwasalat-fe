@@ -93,8 +93,10 @@ export function MapComponent({
     });
   };
 
-  const onAutocompleteLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    autocomplete.setComponentRestrictions({ country: "OM" });
+  const onAutocompleteLoad = (
+    autocomplete: google.maps.places.Autocomplete
+  ) => {
+    autocomplete.setComponentRestrictions({ country: 'OM' });
     setSearchBox(autocomplete);
   };
 
@@ -137,11 +139,19 @@ export function MapComponent({
                 ref={inputRef}
                 type="text"
                 placeholder={t('form.search_location')}
-                className={isRtl ? "pr-10 pl-4 py-2 w-full" : "pl-10 pr-4 py-2 w-full"}
+                className={
+                  isRtl ? 'pr-10 pl-4 py-2 w-full' : 'pl-10 pr-4 py-2 w-full'
+                }
                 defaultValue={currentAddress}
-                dir={isRtl ? "rtl" : "ltr"}
+                dir={isRtl ? 'rtl' : 'ltr'}
               />
-              <div className={isRtl ? "absolute right-3 top-1/2 transform -translate-y-1/2" : "absolute left-3 top-1/2 transform -translate-y-1/2"}>
+              <div
+                className={
+                  isRtl
+                    ? 'absolute right-3 top-1/2 transform -translate-y-1/2'
+                    : 'absolute left-3 top-1/2 transform -translate-y-1/2'
+                }
+              >
                 <Search className="text-gray-400 h-4 w-4" />
               </div>
             </div>
@@ -149,8 +159,10 @@ export function MapComponent({
         </div>
       </div>
       <LoadScriptNext
+        key={i18n.language}
         googleMapsApiKey={String(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)}
         libraries={['places']}
+        language={i18n.language}
       >
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%' }}

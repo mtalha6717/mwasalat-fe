@@ -1,11 +1,13 @@
 {
   "form": {
-    "title": "Registration Form",
-    "description": "Please fill out all the required information below",
+    "title": "Welcome to Mwasalat !",
+    "subTitle": "We are delighted to serve you and always strive to provide the best services.",
+    "description": "In our efforts to improve and expand our services, we invite you to participate in our field survey to identify additional locations to better serve you.",
+    "subDescription": "All you need to do is:",
     "college": "College/University",
     "placeHolder": "Search for a college/university...",
     "phone": "Phone Number",
-    "phoneFormat": "+96896555067",
+    "phoneFormat": "+96899999999",
     "email": "Email Address",
     "emailFormat": "you@example.com",
     "location": "Location",
@@ -26,12 +28,12 @@
     },
     "messages": {
       "locationError": "Unable to get your current location. Please check your browser permissions.",
-      "geolocationNotSupported": "Your browser does not support geolocation services.",
+      "geolocationNotSupported": "Your browser does not support geo-location services.",
       "addressLookupFailed": "Unable to get address for this location."
     },
     "toast": {
       "successTitle": "Information submitted successfully",
-      "successEmail": "We've sent a confirmation email to your email address.",
+      "successEmail": "A confirmation email has been sent to your email address, and a verification OTP has been sent to your phone number.",
       "successDefault": "Thank you for submitting your information.",
       "errorTitle": "Something went wrong",
       "errorDefault": "We couldn't submit your information. Please try again."
@@ -44,8 +46,9 @@
       "initial": "Enter the verification code sent to your phone",
       "pending": "Verifying your code...",
       "pendingEmail": "We're verifying your email address",
-
       "verified": "Your email has been verified",
+      "phoneVerified": "Your phone has been verified",
+      "phoneError": "There was an issue verifying your phone",
       "error": "There was an issue verifying your email"
     },
     "enterCode": "Enter Verification Code",
@@ -60,12 +63,17 @@
     "verifyingWait": "We're confirming the email address:",
 
     "verified": "Email Verified!",
+    "phoneVerified": "Phone Verified!",
     "successMessage": "Your email address",
+    "phoneSuccessMessage": "Your Phone",
     "successMessageEnd": "has been successfully verified.",
     "continue": "Continue to Dashboard",
     "toast": {
+      "codeResendTitle": "Verification Code",
+      "codeSent": "We've sent a 4-digit verification code to: {{phone}}",
+      "errorCodeResendDescription": "Something went wrong while verifying your code. Please try again.",
       "invalidTitle": "Invalid OTP",
-      "invalidDescription": "Please enter a valid 6-digit OTP code.",
+      "invalidDescription": "Please enter a valid 4-digit OTP code.",
       "failedTitle": "Verification Failed",
       "failedDescription": "The OTP code you entered is incorrect or expired. Please try again.",
       "errorTitle": "Verification Error",

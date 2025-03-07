@@ -38,9 +38,7 @@ export default function ConfirmationPage() {
       if (!success) {
         toast({
           title: message,
-          description:
-            err ||
-            t('verification.toast.errorDescription'),
+          description: String(err) || t('verification.toast.errorDescription'),
           variant: 'destructive',
         });
       }
@@ -58,14 +56,14 @@ export default function ConfirmationPage() {
     }
   }, [token, email]);
 
-  const directionClass = i18n.language === 'ar' ? 'rtl-form' : '';
-
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center ${directionClass}`}>
+    <div
+      className={`min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center`}
+    >
       <LanguageSwitcher />
-      
+
       <Card className="w-full max-w-md shadow-xl overflow-hidden">
-        <CardHeader className="bg-[#A6001E] text-white">
+        <CardHeader className="bg-gradient-to-b from-[#A6001E] to-[#A6001E]/50 text-white">
           <CardTitle className="text-2xl md:text-3xl font-bold">
             {t('verification.emailTitle')}
           </CardTitle>
@@ -80,8 +78,8 @@ export default function ConfirmationPage() {
         <CardContent className="flex flex-col items-center justify-center p-8 space-y-6">
           {verificationStatus === 'pending' && (
             <>
-              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100">
-                <Loader2 className="h-10 w-10 text-indigo-600 animate-spin" />
+              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#A6001E]/30">
+                <Loader2 className="h-10 w-10 text-[#A6001E] animate-spin" />
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-semibold mb-2">
@@ -101,10 +99,13 @@ export default function ConfirmationPage() {
                 <CheckCircle className="h-10 w-10 text-green-600" />
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">{t('verification.verified')}</h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('verification.verified')}
+                </h3>
                 <p className="text-gray-500">
                   {t('verification.successMessage')}{' '}
-                  <span className="font-medium">{email}</span> {t('verification.successMessageEnd')}
+                  <span className="font-medium">{email}</span>{' '}
+                  {t('verification.successMessageEnd')}
                 </p>
               </div>
             </>
@@ -112,8 +113,8 @@ export default function ConfirmationPage() {
 
           {verificationStatus === 'error' && (
             <>
-              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-red-100">
-                <Mail className="h-10 w-10 text-red-600" />
+              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-[#A6001E]/30">
+                <Mail className="h-10 w-10 text-[#A6001E]" />
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-semibold mb-2">

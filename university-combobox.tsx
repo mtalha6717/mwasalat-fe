@@ -33,10 +33,10 @@ export function UniversityCombobox({
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
   const { t, i18n } = useTranslation();
-  
+
   const isRtl = i18n.language === 'ar';
   const directionClass = isRtl ? 'text-right' : 'text-left';
-  
+
   return (
     <div className="relative w-full">
       <Popover open={open} onOpenChange={setOpen}>
@@ -49,41 +49,42 @@ export function UniversityCombobox({
             dir={isRtl ? 'rtl' : 'ltr'}
           >
             {value ? value : t('form.placeHolder')}
-            <ChevronsUpDown className={`${isRtl ? 'mr-2' : 'ml-2'} h-4 w-4 shrink-0 opacity-50`} />
+            <ChevronsUpDown
+              className={`${
+                isRtl ? 'mr-2' : 'ml-2'
+              } h-4 w-4 shrink-0 opacity-50`}
+            />
           </Button>
         </PopoverTrigger>
-        <PopoverContent 
-          className="p-0 w-full" 
-          align={isRtl ? "end" : "start"} 
+        <PopoverContent
+          className="p-0 w-full"
+          align={isRtl ? 'end' : 'start'}
           sideOffset={4}
           alignOffset={0}
           style={{ width: 'var(--radix-popover-trigger-width)' }}
         >
-          <Command className={`w-full ${directionClass}`} dir={isRtl ? 'rtl' : 'ltr'}>
+          <Command
+            className={`w-full ${directionClass}`}
+            dir={isRtl ? 'rtl' : 'ltr'}
+          >
             <CommandInput
               placeholder={t('form.placeHolder')}
               value={searchValue}
               onValueChange={setSearchValue}
-              className={directionClass}
+              className={`${directionClass} w-full`}
             />
             <CommandList className="max-h-60 w-full overflow-auto">
               <CommandEmpty>
                 {searchValue ? (
                   <>
-                    {isRtl ? 'لم يتم العثور على جامعة.' : 'No university found.'}
-                    <Button
-                      variant="link"
-                      className="p-0 h-auto font-normal"
-                      onClick={() => {
-                        onChange(searchValue);
-                        setOpen(false);
-                      }}
-                    >
-                      {isRtl ? `إضافة "${searchValue}"` : `Add "${searchValue}"`}
-                    </Button>
+                    {isRtl
+                      ? 'لم يتم العثور على جامعة.'
+                      : 'No university found.'}
                   </>
+                ) : isRtl ? (
+                  'لم يتم العثور على جامعة.'
                 ) : (
-                  isRtl ? 'لم يتم العثور على جامعة.' : 'No university found.'
+                  'No university found.'
                 )}
               </CommandEmpty>
               <CommandGroup className="w-full">
