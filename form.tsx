@@ -1,7 +1,6 @@
 'use client';
 
 import { CardFooter } from '@/components/ui/card';
-
 import { useState, useEffect } from 'react';
 import { useLoadScript } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
@@ -18,7 +17,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { MapComponent } from './map-component';
 import { UniversityCombobox } from './university-combobox';
 import {
@@ -31,68 +29,62 @@ import {
 } from '@/components/ui/form';
 import apiPost from '@/lib/network/apiPost';
 import { useToast } from './hooks/use-toast';
-
-const universitiesWithCoordinates = [
-  { label: 'Harvard University', lat: 42.374443, lon: -71.116943 },
-  { label: 'Stanford University', lat: 37.42823, lon: -122.168861 },
-  {
-    label: 'Massachusetts Institute of Technology',
-    lat: 42.360091,
-    lon: -71.09416,
-  },
-  {
-    label: 'University of California, Berkeley',
-    lat: 37.871853,
-    lon: -122.258423,
-  },
-  { label: 'University of Oxford', lat: 51.754816, lon: -1.254367 },
-  { label: 'University of Cambridge', lat: 52.204267, lon: 0.114908 },
-  {
-    label: 'California Institute of Technology',
-    lat: 34.137658,
-    lon: -118.125269,
-  },
-  { label: 'Princeton University', lat: 40.343094, lon: -74.655073 },
-  { label: 'Yale University', lat: 41.316324, lon: -72.922343 },
-  { label: 'Columbia University', lat: 40.807536, lon: -73.962573 },
-  { label: 'University of Chicago', lat: 41.788608, lon: -87.598713 },
-  { label: 'University of Michigan', lat: 42.278044, lon: -83.738224 },
-  { label: 'Cornell University', lat: 42.453449, lon: -76.473503 },
-  { label: 'University of Pennsylvania', lat: 39.952219, lon: -75.193214 },
-  { label: 'Johns Hopkins University', lat: 39.329901, lon: -76.620515 },
-];
-
-// Form validation schema
-const formSchema = yup.object({
-  college: yup.string().required('College/University is required'),
-  phone: yup
-    .string()
-    .required('Phone number is required')
-    .matches(
-      /^(\+968[- ]?)?(9\d{2}[- ]?\d{3}[- ]?\d{2}|(2|4|5)\d{2}[- ]?\d{3}[- ]?\d{2})$/,
-      'Please enter a valid Omani phone number'
-    ),
-  email: yup
-    .string()
-    .required('Email is required')
-    .email('Please enter a valid email address'),
-  location: yup
-    .object({
-      lat: yup.number().required(),
-      lng: yup.number().required(),
-    })
-    .required('Location is required'),
-  address: yup.string(),
-});
-
-type FormValues = yup.InferType<typeof formSchema>;
+import { MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './components/ui/language-switcher';
+import { universitiesData } from './lib/common';
 
 export default function FascinatingForm() {
   const router = useRouter();
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [address, setAddress] = useState('');
+
+  // Get universities in the current language
+  const [universities, setUniversities] = useState<
+    Array<{ label: string; lat: number; lon: number }>
+  >([]);
+
+  // Update universities list when language changes
+  useEffect(() => {
+    const currentLanguage = i18n.language;
+    const languageKey = currentLanguage === 'ar' ? 'ar' : 'en';
+
+    const translatedUniversities = universitiesData.map((uni) => ({
+      label: uni[languageKey],
+      lat: uni.lat,
+      lon: uni.lon,
+    }));
+
+    setUniversities(translatedUniversities);
+  }, [i18n.language]);
+
+  // Form validation schema with translations
+  const formSchema = yup.object({
+    college: yup.string().required(t('form.validation.collegeRequired')),
+    phone: yup
+      .string()
+      .required(t('form.validation.phoneRequired'))
+      .matches(
+        /^(\+968)?(9\d{7}|(2|4|5)\d{7})$/,
+        t('form.validation.phoneInvalid')
+      ),
+    email: yup
+      .string()
+      .required(t('form.validation.emailRequired'))
+      .email(t('form.validation.emailInvalid')),
+    location: yup
+      .object({
+        lat: yup.number().required(),
+        lng: yup.number().required(),
+      })
+      .required(t('form.validation.locationRequired')),
+    address: yup.string(),
+  });
+
+  type FormValues = yup.InferType<typeof formSchema>;
 
   const form = useForm<FormValues>({
     resolver: yupResolver(formSchema),
@@ -110,8 +102,7 @@ export default function FascinatingForm() {
     libraries: ['places'],
   });
 
-  useEffect(() => {
-    // Get current location when component mounts
+  const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -121,17 +112,55 @@ export default function FascinatingForm() {
           };
           setLocation(newLocation);
           form.setValue('location', newLocation);
+
+          if (isLoaded) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: newLocation }, (results, status) => {
+              if (status === 'OK' && results && results[0]) {
+                const newAddress = results[0].formatted_address;
+                setAddress(newAddress);
+                form.setValue('address', newAddress);
+              } else {
+                console.error('Geocoder failed due to: ' + status);
+                toast({
+                  title: 'Address Lookup Failed',
+                  description: t('form.messages.addressLookupFailed'),
+                  variant: 'destructive',
+                });
+              }
+            });
+          }
         },
         () => {
           console.error('Error getting current location');
-          // Default to a fallback location if geolocation fails
-          const fallbackLocation = { lat: 40.7128, lng: -74.006 }; // New York City
+          toast({
+            title: 'Location Error',
+            description: t('form.messages.locationError'),
+            variant: 'destructive',
+          });
+
+          // Fallback location
+          const fallbackLocation = { lat: 23.588, lng: 58.3829 }; // Muscat, Oman
           setLocation(fallbackLocation);
           form.setValue('location', fallbackLocation);
         }
       );
+    } else {
+      toast({
+        title: 'Geolocation Not Supported',
+        description: t('form.messages.geolocationNotSupported'),
+        variant: 'destructive',
+      });
     }
-  }, [form]);
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  useEffect(() => {
+    form.reset(form.getValues());
+  }, [i18n.language, form]);
 
   const handleLocationSelect = (
     newLocation: { lat: number; lng: number },
@@ -143,12 +172,23 @@ export default function FascinatingForm() {
     form.setValue('address', newAddress);
   };
 
+  const findCollegeCoordinates = (collegeName: string) => {
+    const currentLanguage = i18n.language;
+    const languageKey = currentLanguage === 'ar' ? 'ar' : 'en';
+
+    const college = universitiesData.find(
+      (uni) => uni[languageKey] === collegeName
+    );
+
+    return college ? { lat: college.lat, lon: college.lon } : null;
+  };
+
   const onSubmit = async (data: FormValues) => {
     const { location, ...rest } = data;
     setIsSubmitting(true);
-    const college = universitiesWithCoordinates.find(
-      (item) => item.label === rest.college
-    );
+
+    const collegeCoords = findCollegeCoordinates(rest.college);
+
     const {
       success,
       data: response,
@@ -157,38 +197,49 @@ export default function FascinatingForm() {
       ...rest,
       userLatitude: location?.lat,
       userLongitude: location?.lng,
-      collegeLatitude: college?.lat,
-      collegeLongitude: college?.lon,
+      collegeLatitude: collegeCoords?.lat,
+      collegeLongitude: collegeCoords?.lon,
     });
 
     if (success) {
       toast({
-        title: 'Information submitted successfully',
-        description: response?.isEmailSent
-          ? "We've sent a confirmation email to your email address."
-          : 'Thank you for submitting your information.',
+        title: t('form.toast.successTitle'),
+        description: t('form.toast.successEmail'),
       });
       form.reset();
+      router.push('/verify-phone?phone=' + encodeURIComponent(rest.phone));
     } else {
       toast({
-        title: 'Something went wrong',
-        description:
-          message || "We couldn't submit your information. Please try again.",
+        title: t('form.toast.errorTitle'),
+        description: message || t('form.toast.errorDefault'),
         variant: 'destructive',
       });
     }
     setIsSubmitting(false);
   };
 
+  const directionClass = i18n.language === 'ar' ? 'rtl-form' : '';
+  const isArabic = i18n.language === 'ar';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center">
+    <div
+      className={`min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4 md:p-8 flex items-center justify-center ${directionClass}`}
+    >
+      <LanguageSwitcher />
+
       <Card className="w-full max-w-4xl shadow-xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-          <CardTitle className="text-2xl md:text-3xl font-bold">
-            Registration Form
+        <p className="bg-gradient-to-b flex justify-end h-[120px] from-[#A6001E]/50 via-[#A6001E]/10 to-[#A6001E]/5 text-white">
+          <img src="/logo.svg" alt="logo" className="h-40 w-40 me-10 mt-5" />
+        </p>
+
+        <CardHeader className="text-black">
+          <CardTitle className="text-xl md:text-xl font-bold">
+            {t('form.title')}
           </CardTitle>
-          <CardDescription className="text-purple-100">
-            Please fill out all the required information below
+          <CardDescription>
+            <p className="mb-2">{t('form.subTitle')}</p>
+            <p className="mb-1">{t('form.description')}</p>
+            <p>{t('form.subDescription')}</p>
           </CardDescription>
         </CardHeader>
         <Form {...form}>
@@ -200,11 +251,11 @@ export default function FascinatingForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-lg font-medium">
-                      College/University
+                      {t('form.college')}
                     </FormLabel>
                     <FormControl>
                       <UniversityCombobox
-                        universities={universitiesWithCoordinates?.map(
+                        universities={universities.map(
                           (university) => university.label
                         )}
                         value={field.value}
@@ -223,10 +274,10 @@ export default function FascinatingForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-lg font-medium">
-                        Phone Number
+                        {t('form.phone')}
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="+96896555067" {...field} />
+                        <Input placeholder={t('form.phoneFormat')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -238,12 +289,12 @@ export default function FascinatingForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-lg font-medium">
-                        Email Address
+                        {t('form.email')}
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="you@example.com"
+                          placeholder={t('form.emailFormat')}
                           {...field}
                         />
                       </FormControl>
@@ -254,7 +305,35 @@ export default function FascinatingForm() {
               </div>
 
               <div className="grid gap-2">
-                <Label className="text-lg font-medium">Location</Label>
+                {isArabic ? (
+                  <div className="flex justify-between items-center">
+                    <Button
+                      type="button"
+                      onClick={getCurrentLocation}
+                      className="flex items-center gap-1 bg-[#A6001E] border-[#A6001E] text-white hover:bg-[#8A0017]"
+                    >
+                      <MapPin size={16} />
+                      <span>{t('form.locateMe')}</span>
+                    </Button>
+                    <Label className="text-lg font-medium">
+                      {t('form.location')}
+                    </Label>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <Label className="text-lg font-medium">
+                      {t('form.location')}
+                    </Label>
+                    <Button
+                      type="button"
+                      onClick={getCurrentLocation}
+                      className="flex items-center gap-1 bg-[#A6001E] border-[#A6001E] text-white hover:bg-[#8A0017]"
+                    >
+                      <MapPin size={16} />
+                      <span>{t('form.locateMe')}</span>
+                    </Button>
+                  </div>
+                )}
                 <div className="h-[300px] rounded-md overflow-hidden border">
                   {isLoaded ? (
                     <MapComponent
@@ -264,17 +343,17 @@ export default function FascinatingForm() {
                     />
                   ) : (
                     <div className="h-full flex items-center justify-center bg-gray-100">
-                      Loading map...
+                      {t('form.loadingMap')}
                     </div>
                   )}
                 </div>
                 <p className="text-sm text-gray-500 mt-1">
-                  Current coordinates: {location.lat.toFixed(6)},{' '}
+                  {t('form.coordinates')}: {location.lat.toFixed(6)},{' '}
                   {location.lng.toFixed(6)}
                 </p>
                 {address && (
                   <p className="text-sm text-gray-700 font-medium">
-                    Selected address: {address}
+                    {t('form.selectedAddress')}: {address}
                   </p>
                 )}
                 {form.formState.errors.location && (
@@ -288,9 +367,9 @@ export default function FascinatingForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium py-2"
+                className="w-full bg-[#A6001E] hover:bg-[#8A0017] text-white font-medium py-2"
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Registration'}
+                {isSubmitting ? t('form.submitting') : t('form.submit')}
               </Button>
             </CardFooter>
           </form>

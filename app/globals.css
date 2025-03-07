@@ -75,3 +75,66 @@
   }
 }
 
+html[dir="rtl"] {
+  font-family: "Inter", sans-serif;
+}
+
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+html[dir="rtl"] .rtl-form label,
+html[dir="rtl"] .rtl-form p,
+html[dir="rtl"] .rtl-form h1,
+html[dir="rtl"] .rtl-form h2,
+html[dir="rtl"] .rtl-form h3 {
+  text-align: right;
+}
+
+html[dir="rtl"] .rtl-form input,
+html[dir="rtl"] .rtl-form textarea {
+  text-align: right;
+  direction: rtl;
+}
+
+html[dir="rtl"] .flex.justify-between {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .fixed.top-4.right-4 {
+  right: auto;
+  left: 1rem;
+}
+
+html[dir="rtl"] .rtl-form .card-header {
+  text-align: right;
+}
+
+html[dir="rtl"] .rtl-form .form-message {
+  text-align: right;
+}
+
+html[dir="rtl"] .gap-1 {
+  gap: 0.25rem;
+}
+
+html[dir="rtl"] .rtl-form .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+html[dir="rtl"] .rtl-form .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.force-ltr {
+  direction: ltr !important;
+  text-align: center !important;
+  unicode-bidi: plaintext !important;
+}
+
+.force-ltr input {
+  direction: ltr !important;
+  text-align: center !important;
+}

@@ -8,6 +8,7 @@ import {
 } from '@react-google-maps/api';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface MapComponentProps {
   center: {
@@ -26,14 +27,15 @@ export function MapComponent({
   onLocationSelect,
   currentAddress,
 }: MapComponentProps) {
+  const { t, i18n } = useTranslation();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
   const [searchBox, setSearchBox] =
     useState<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isRtl = i18n.dir() === 'rtl';
 
   useEffect(() => {
-    // When center changes, update the marker position
     if (map && marker) {
       marker.setPosition(center);
       map.panTo(center);
@@ -43,7 +45,6 @@ export function MapComponent({
   const onMapLoad = (map: google.maps.Map) => {
     setMap(map);
 
-    // Create a marker at the initial center
     const newMarker = new google.maps.Marker({
       position: center,
       map: map,
@@ -52,7 +53,6 @@ export function MapComponent({
 
     setMarker(newMarker);
 
-    // Add event listener for marker drag end
     newMarker.addListener('dragend', () => {
       const position = newMarker.getPosition();
       if (position) {
@@ -61,7 +61,6 @@ export function MapComponent({
           lng: position.lng(),
         };
 
-        // Get address from coordinates (reverse geocoding)
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ location: newLocation }, (results, status) => {
           if (status === 'OK' && results && results[0]) {
@@ -73,7 +72,6 @@ export function MapComponent({
       }
     });
 
-    // Add click event to map to move marker
     map.addListener('click', (e: google.maps.MapMouseEvent) => {
       if (e.latLng && newMarker) {
         newMarker.setPosition(e.latLng);
@@ -83,7 +81,6 @@ export function MapComponent({
           lng: e.latLng.lng(),
         };
 
-        // Get address from coordinates (reverse geocoding)
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ location: newLocation }, (results, status) => {
           if (status === 'OK' && results && results[0]) {
@@ -99,6 +96,7 @@ export function MapComponent({
   const onAutocompleteLoad = (
     autocomplete: google.maps.places.Autocomplete
   ) => {
+    autocomplete.setComponentRestrictions({ country: 'OM' });
     setSearchBox(autocomplete);
   };
 
@@ -140,18 +138,31 @@ export function MapComponent({
               <Input
                 ref={inputRef}
                 type="text"
-                placeholder="Search for a location..."
-                className="pl-10 pr-4 py-2 w-full"
+                placeholder={t('form.search_location')}
+                className={
+                  isRtl ? 'pr-10 pl-4 py-2 w-full' : 'pl-10 pr-4 py-2 w-full'
+                }
                 defaultValue={currentAddress}
+                dir={isRtl ? 'rtl' : 'ltr'}
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <div
+                className={
+                  isRtl
+                    ? 'absolute right-3 top-1/2 transform -translate-y-1/2'
+                    : 'absolute left-3 top-1/2 transform -translate-y-1/2'
+                }
+              >
+                <Search className="text-gray-400 h-4 w-4" />
+              </div>
             </div>
           </Autocomplete>
         </div>
       </div>
       <LoadScriptNext
+        key={i18n.language}
         googleMapsApiKey={String(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)}
         libraries={['places']}
+        language={i18n.language}
       >
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%' }}
