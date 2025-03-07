@@ -96,7 +96,7 @@ export function UniversityCombobox({
                       onChange(university);
                       setOpen(false);
                     }}
-                    className={directionClass}
+                    className={`${directionClass} w-full`}
                   >
                     <Check
                       className={cn(
