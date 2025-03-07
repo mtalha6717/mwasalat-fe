@@ -59,13 +59,15 @@ export function UniversityCombobox({
           alignOffset={0}
           style={{ width: 'var(--radix-popover-trigger-width)' }}
         >
-          <Command className={`w-full ${directionClass}`} dir={isRtl ? 'rtl' : 'ltr'}>
-            <CommandInput
-              placeholder={t('form.placeHolder')}
-              value={searchValue}
-              onValueChange={setSearchValue}
-              className={directionClass}
-            />
+          <Command className="w-full" dir={isRtl ? 'rtl' : 'ltr'}>
+            <div className="w-full">
+              <CommandInput
+                placeholder={t('form.placeHolder')}
+                value={searchValue}
+                onValueChange={setSearchValue}
+                className={`${directionClass} w-full`}
+              />
+            </div>
             <CommandList className="max-h-60 w-full overflow-auto">
               <CommandEmpty>
                 {searchValue ? (
@@ -95,7 +97,7 @@ export function UniversityCombobox({
                       onChange(university);
                       setOpen(false);
                     }}
-                    className={directionClass}
+                    className={`${directionClass} w-full`}
                   >
                     <Check
                       className={cn(
