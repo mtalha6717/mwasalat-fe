@@ -228,11 +228,15 @@ export default function FascinatingForm() {
       <LanguageSwitcher />
 
       <Card className="w-full max-w-4xl shadow-xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-b from-[#A6001E] to-[#A6001E]/50 text-white">
+        <p className="bg-gradient-to-b flex justify-end h-[120px] from-[#A6001E]/50 via-[#A6001E]/10 to-[#A6001E]/5 text-white">
+          <img src="/logo.svg" alt="logo" className="h-40 w-40 me-10 mt-5" />
+        </p>
+
+        <CardHeader className="text-black">
           <CardTitle className="text-xl md:text-xl font-bold">
             {t('form.title')}
           </CardTitle>
-          <CardDescription className="text-purple-100">
+          <CardDescription>
             <p className="mb-2">{t('form.subTitle')}</p>
             <p className="mb-1">{t('form.description')}</p>
             <p>{t('form.subDescription')}</p>

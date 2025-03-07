@@ -119,7 +119,7 @@ export default function ConfirmationPage() {
     >
       <LanguageSwitcher />
       <Card className="w-full max-w-md shadow-xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-b from-[#A6001E] to-[#A6001E]/50 text-white">
+        <CardHeader className="bg-gradient-to-b from-[#A6001E]/50 via-[#A6001E]/10 to-[#A6001E]/5 text-black">
           <CardTitle className="text-2xl md:text-3xl font-bold">
             {t('verification.title')}
           </CardTitle>
