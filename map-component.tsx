@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import {
   GoogleMap,
   Autocomplete,
@@ -20,16 +20,20 @@ interface MapComponentProps {
     address: string
   ) => void;
   currentAddress: string;
+  setMarker: Dispatch<SetStateAction<google.maps.Marker | null>>;
+  marker: google.maps.Marker | null;
 }
 
 export function MapComponent({
   center,
   onLocationSelect,
   currentAddress,
+  setMarker,
+  marker,
 }: MapComponentProps) {
   const { t, i18n } = useTranslation();
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+
   const [searchBox, setSearchBox] =
     useState<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -158,24 +162,24 @@ export function MapComponent({
           </Autocomplete>
         </div>
       </div>
-      <LoadScriptNext
+      {/* <LoadScriptNext
         key={i18n.language}
-        googleMapsApiKey={String(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)}
-        libraries={['places']}
-        language={i18n.language}
-      >
-        <GoogleMap
-          mapContainerStyle={{ width: '100%', height: '100%' }}
-          center={center}
-          zoom={14}
-          onLoad={onMapLoad}
-          options={{
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-          }}
-        />
-      </LoadScriptNext>
+        // googleMapsApiKey={String(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)}
+        // libraries={['places']}
+        // language={i18n.language}
+      > */}
+      <GoogleMap
+        mapContainerStyle={{ width: '100%', height: '100%' }}
+        center={center}
+        zoom={14}
+        onLoad={onMapLoad}
+        options={{
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+        }}
+      />
+      {/* </LoadScriptNext> */}
     </div>
   );
 }

@@ -41,6 +41,7 @@ export default function FascinatingForm() {
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [address, setAddress] = useState('');
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
 
   // Get universities in the current language
   const [universities, setUniversities] = useState<
@@ -97,6 +98,7 @@ export default function FascinatingForm() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
     libraries: ['places'],
+    language: i18n.language,
   });
 
   const getCurrentLocation = () => {
@@ -153,7 +155,7 @@ export default function FascinatingForm() {
 
   useEffect(() => {
     getCurrentLocation();
-  }, []);
+  }, [isLoaded]);
 
   useEffect(() => {
     form.reset(form.getValues());
@@ -205,7 +207,9 @@ export default function FascinatingForm() {
         description: t('form.toast.successEmail'),
       });
       form.reset();
-      router.push('/verify-phone?phone=' + encodeURIComponent(rest.phone));
+      router.push(
+        '/verify-phone?phone=' + encodeURIComponent(`+968${rest.phone}`)
+      );
     } else {
       toast({
         title: t('form.toast.errorTitle'),
@@ -349,6 +353,8 @@ export default function FascinatingForm() {
                 <div className="h-[300px] rounded-md overflow-hidden border">
                   {isLoaded ? (
                     <MapComponent
+                      setMarker={setMarker}
+                      marker={marker}
                       center={location}
                       onLocationSelect={handleLocationSelect}
                       currentAddress={address}
