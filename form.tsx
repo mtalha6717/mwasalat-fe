@@ -67,10 +67,7 @@ export default function FascinatingForm() {
     phone: yup
       .string()
       .required(t('form.validation.phoneRequired'))
-      .matches(
-        /^(\+968)?(9\d{7}|(2|4|5)\d{7})$/,
-        t('form.validation.phoneInvalid')
-      ),
+      .matches(/^(9\d{7}|(2|4|5)\d{7})$/, t('form.validation.phoneInvalid')),
     email: yup
       .string()
       .required(t('form.validation.emailRequired'))
@@ -195,6 +192,7 @@ export default function FascinatingForm() {
       message,
     } = await apiPost('forms', {
       ...rest,
+      phone: `+968${rest.phone}`,
       userLatitude: location?.lat,
       userLongitude: location?.lng,
       collegeLatitude: collegeCoords?.lat,
@@ -277,7 +275,21 @@ export default function FascinatingForm() {
                         {t('form.phone')}
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder={t('form.phoneFormat')} {...field} />
+                        <div className="flex items-center border border-input rounded-md overflow-hidden">
+                          <span className="bg-gray-100 px-3 py-2 text-gray-700">
+                            +968
+                          </span>
+                          <Input
+                            placeholder={t('form.phoneFormat')}
+                            className="border-0"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value.replace(/^\+968/, '')
+                              )
+                            }
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
